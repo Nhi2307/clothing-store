@@ -1,0 +1,91 @@
+﻿@model List<DoAn_LTWeb.Models.SanPhamDMViewModel>
+@{
+    ViewBag.Title = "TimKiem";
+    Layout = "~/Views/Shared/UserLayout.cshtml";
+}
+
+<div class="container mt-4">
+    <h3>Kết quả tìm kiếm cho: "@ViewBag.TuKhoa"</h3>
+
+    @if (Model == null || !Model.Any())
+    {
+        <p>Không tìm thấy sản phẩm nào.</p>
+        <a href="@Url.Action("IndexDM", "DanhMuc")" class="btn btn-primary">Quay lại</a>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var sp in Model)
+            {
+                <div class="col-md-3 mb-3">
+                    <div class="card position-relative">
+                        <img src="@Url.Content("~/Content/HinhAnh/" + sp.HinhAnhChinh)"
+                             class="card-img-top" alt="@sp.TenSanPham">
+
+                        @if (sp.MucGiam > 0)
+                        {
+                            <span class="sale-badge">-@sp.MucGiam %</span>
+                        }
+
+                    <div class="card-body text-center">
+                        <h6 class="card-title">@sp.TenSanPham</h6>
+
+                        @if (sp.MucGiam > 0)
+                        {
+                            <p>
+                                <span class="original-price">@sp.GiaGoc.ToString("N0") VNĐ</span>
+                                <span class="sale-price">@sp.GiaKM.ToString("N0") VNĐ</span>
+                            </p>
+                        }
+                        else
+                        {
+                            <p class="sale-price">@sp.GiaGoc.ToString("N0") VNĐ</p>
+                        }
+
+                        <p class="detail-link">
+                            <a onclick="location.href='@Url.Action("XemChiTiet", "Product", new { id = sp.MaSanPham })'">
+                                Xem chi tiết
+                            </a>
+                        </p>
+                    </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<style>
+    .sale-badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background-color: red;
+        color: white;
+        font-weight: bold;
+        padding: 4px 6px;
+        font-size: 0.85rem;
+        border-radius: 4px;
+        z-index: 2;
+    }
+
+    .original-price {
+        text-decoration: line-through;
+        color: #888;
+        margin-right: 5px;
+    }
+
+    .sale-price {
+        color: #e74c3c;
+        font-weight: bold;
+        font-size: 1.05rem;
+    }
+    .detail-link {
+        display: inline-block;
+        margin-top: 10px;
+        color: #007bff; 
+        font-weight: 500;
+        cursor: pointer;
+        text-decoration: none;
+    }
+</style>

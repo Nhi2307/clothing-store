@@ -1,0 +1,82 @@
+﻿@model DoAn_LTWeb.Models.DonHang
+@{
+    ViewBag.Title = "Chi tiết đơn hàng";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    var ct = ViewBag.ChiTiet as List<DoAn_LTWeb.Models.ChiTietDonHang>;
+}
+
+@{
+    string role = Session["VaiTro"] as string;
+    bool isStaffOrAdmin = role == "Admin" || role == "NhanVien";
+}
+
+@if (isStaffOrAdmin)
+{
+    <div class="mt-4 text-end">
+        <a href="@Url.Action("InHoaDon", "Order", new { id = Model.MaDonHang })"
+           target="_blank"
+           class="btn btn-dark">
+            <i class="fas fa-print"></i> In hóa đơn
+        </a>
+    </div>
+}
+
+
+<h2>Chi tiết đơn hàng #@Model.MaDonHang</h2>
+
+<p><strong>Khách hàng:</strong> @(Model.NguoiDung?.HoTen ?? "Không rõ")</p>
+<p><strong>Ngày đặt:</strong> @(Model.NgayDat.HasValue ? Model.NgayDat.Value.ToString("dd/MM/yyyy") : "")</p>
+<p><strong>Tổng tiền:</strong> @String.Format("{0:N0}", Model.TongTien ?? 0) đ</p>
+
+<h4>Trạng thái đơn</h4>
+<form method="post" action="@Url.Action("UpdateStatus")">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" value="@Model.MaDonHang" />
+    <select name="status" class="form-control" style="max-width: 300px;">
+        <option @(Model.TrangThai == "Chờ xác nhận" ? "selected" : "")>Chờ xác nhận</option>
+        <option @(Model.TrangThai == "Đang giao" ? "selected" : "")>Đang giao</option>
+        <option @(Model.TrangThai == "Hoàn thành" ? "selected" : "")>Hoàn thành</option>
+        <option @(Model.TrangThai == "Hủy" ? "selected" : "")>Hủy</option>
+    </select>
+
+    <button type="submit" class="btn btn-primary mt-2">Cập nhật</button>
+</form>
+
+<hr />
+
+<h4>Sản phẩm trong đơn</h4>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Sản phẩm</th>
+            <th>Biến thể</th>
+            <th>Giá</th>
+            <th>Số lượng</th>
+            <th>Thành tiền</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var c in ct)
+        {
+            <tr>
+                <td>@c.SanPhamBienThe.SanPham.TenSanPham</td>
+                <td>
+                    Size: @c.SanPhamBienThe.Size.TenSize <br />
+                    Màu: @c.SanPhamBienThe.MauSac.TenMau
+                </td>
+                <td>@String.Format("{0:N0}", c.DonGia ?? 0) đ</td>
+                <td>@c.SoLuong</td>
+                <td>@String.Format("{0:N0}", c.ThanhTien ?? (c.SoLuong * c.DonGia)) đ</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="mb-3">
+    <a href="@Url.Action("Index", "Order")" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Quay lại danh sách đơn hàng
+    </a>
+</div>
+

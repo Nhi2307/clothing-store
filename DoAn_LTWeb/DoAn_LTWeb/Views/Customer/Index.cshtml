@@ -1,0 +1,41 @@
+﻿@model IEnumerable<DoAn_LTWeb.Models.NguoiDung>
+
+@{
+    ViewBag.Title = "Danh sách khách hàng";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h3 class="mb-3"> Quản lý khách hàng </h3>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Mã KH</th>
+            <th>Họ tên</th>
+            <th>Email</th>
+            <th>Số điện thoại</th>
+            <th>Ngày tạo</th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var kh in Model)
+        {
+            <tr>
+                <td>@kh.MaNguoiDung</td>
+                <td>@kh.HoTen</td>
+                <td>@kh.Email</td>
+                <td>@kh.SoDienThoai</td>
+                <td>@(kh.NgayTao.HasValue ? kh.NgayTao.Value.ToString("dd/MM/yyyy") : "")</td>
+                <td>
+                    <a href="@Url.Action("Details", new { id = kh.MaNguoiDung })" class="btn btn-info btn-sm" > <i class="fas fa-eye"></i> Xem</a>
+                    <a href="@Url.Action("Delete", new { id = kh.MaNguoiDung })"
+                       class="btn btn-danger btn-sm"
+                       onclick="return confirm('Bạn có chắc muốn xóa khách hàng này?');">
+                        <i class="fas fa-trash"></i> Xóa
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,19 @@
+﻿@model DoAn_LTWeb.Models.NguoiDung
+@{
+    ViewBag.Title = "Hồ sơ cá nhân";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="card p-4 shadow">
+    <h3 class="mb-3">Thông tin tài khoản</h3>
+
+    <p><strong>Họ tên:</strong> @Model.HoTen</p>
+    <p><strong>Email:</strong> @Model.Email</p>
+    <p><strong>Số điện thoại:</strong> @Model.SoDienThoai</p>
+    <p><strong>Địa chỉ:</strong> @Model.DiaChi</p>
+    <p><strong>Vai trò:</strong> @Model.VaiTro</p>
+
+    <a href="@Url.Action("EditProfile", "Admin")" class="btn btn-primary mt-3">
+        <i class="fas fa-edit"></i> Cập nhật hồ sơ
+    </a>
+</div>

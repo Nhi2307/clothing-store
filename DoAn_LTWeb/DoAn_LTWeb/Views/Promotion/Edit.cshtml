@@ -1,0 +1,58 @@
+﻿
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@model DoAn_LTWeb.Models.KhuyenMai
+
+<h2>Sửa khuyến mãi</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.MaKM)
+
+    <div class="form-group mb-3">
+        <label>Tên khuyến mãi</label>
+        @Html.TextBoxFor(m => m.TenKM, new { @class = "form-control", required = true })
+    </div>
+
+    <div class="form-group mb-3">
+        <label>Sản phẩm áp dụng</label>
+        @Html.DropDownListFor(
+            m => m.MaSanPham,
+            (SelectList)ViewBag.MaSanPham,
+            "-- Chọn sản phẩm --",
+            new { @class = "form-control", required = true }
+        )
+    </div>
+
+    <div class="form-group mb-3">
+        <label>% Giảm</label>
+        @Html.TextBoxFor(m => m.MucGiam,
+            new { @class = "form-control", type = "number", min = "1", max = "100" })
+    </div>
+
+    <div class="form-group mb-3">
+        <label>Ngày bắt đầu</label>
+        @Html.TextBoxFor(m => m.NgayBD,
+            "{0:yyyy-MM-dd}",
+            new { @class = "form-control", type = "date" })
+    </div>
+
+    <div class="form-group mb-3">
+        <label>Ngày kết thúc</label>
+        @Html.TextBoxFor(m => m.NgayKT,
+            "{0:yyyy-MM-dd}",
+            new { @class = "form-control", type = "date" })
+    </div>
+
+    <div class="form-group mb-4">
+        <label>Mô tả</label>
+        @Html.TextAreaFor(m => m.MoTa, new { @class = "form-control", rows = 3 })
+    </div>
+
+    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+    <a href="@Url.Action("Index")" class="btn btn-secondary ms-2">Quay lại</a>
+}

@@ -1,0 +1,135 @@
+﻿
+@{
+    ViewBag.Title = "Khuyến mãi";
+    Layout = "~/Views/Shared/UserLayout.cshtml";
+}
+
+
+@model List<DoAn_LTWeb.Models.KhuyenMaiVM>
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+<style>
+    .product-card {
+        border: 1px solid #eee;
+        background: #fff;
+        transition: all .2s;
+    }
+
+        .product-card:hover {
+            box-shadow: 0 6px 18px rgba(0,0,0,.12);
+            transform: translateY(-3px);
+        }
+
+    .product-img {
+        position: relative;
+        overflow: hidden;
+    }
+
+        .product-img img {
+            width: 100%;
+            height: 340px;
+            object-fit: cover;
+        }
+
+    .discount-badge {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #c62828;
+        color: #fff;
+        padding: 6px 10px;
+        font-size: 13px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+        .discount-badge span {
+            font-weight: bold;
+        }
+
+    .price-old {
+        color: #999;
+        text-decoration: line-through;
+        font-size: 14px;
+    }
+
+    .price-new {
+        color: #e53935;
+        font-weight: bold;
+        font-size: 18px;
+        margin-left: 6px;
+    }
+
+    .sale-tag {
+        background: #e53935;
+        color: #fff;
+        font-size: 12px;
+        padding: 2px 6px;
+        border-radius: 4px;
+        margin-left: 6px;
+    }
+
+    .color-list img {
+        width: 28px;
+        height: 28px;
+        object-fit: cover;
+        border: 1px solid #ddd;
+        margin-right: 4px;
+    }
+
+    .product-title {
+        font-size: 14px;
+        font-weight: 500;
+        margin-top: 6px;
+        min-height: 38px;
+    }
+</style>
+
+<h3 class="fw-bold mb-4 text-danger">SẢN PHẨM ƯU ĐÃI</h3>
+
+<div class="row">
+    @foreach (var km in Model)
+    {
+        <div class="col-md-3 mb-4">
+            <div class="product-card">
+
+                <div class="product-img">
+                    <img src="~/Content/hinhanh/@km.AnhBia" />
+
+                    <div class="discount-badge">
+                        <span>@km.TenKM</span>
+                    </div>
+                </div>
+
+                <div class="p-3">
+                    <div class="color-list mb-2">
+                        <img src="~/Content/hinhanh/@km.AnhBia" />
+                    </div>
+
+                    <div>
+                        <span class="price-new">
+                            @String.Format("{0:N0} đ", km.GiaSauGiam)
+                        </span>
+                        <span class="price-old">
+                            @String.Format("{0:N0} đ", km.GiaBan)
+                        </span>
+                        <span class="sale-tag">@km.MucGiam%</span>
+                    </div>
+
+                    <div class="product-title">
+                        @km.TenSanPham
+                    </div>
+
+                    <a href="@Url.Action("XemChiTiet", "Product", new { id = km.MaSanPham })"
+                       class="btn btn-outline-dark btn-sm w-100 mt-2">
+                        Xem sản phẩm
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

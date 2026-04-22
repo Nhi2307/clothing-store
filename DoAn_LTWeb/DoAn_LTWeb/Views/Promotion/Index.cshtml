@@ -1,0 +1,113 @@
+﻿@model IEnumerable<DoAn_LTWeb.Models.KhuyenMai>
+@{
+    ViewBag.Title = "Quản lý khuyến mãi";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var now = DateTime.Now;
+}
+
+@{
+    string role = Session["VaiTro"] as string;
+    bool isAdmin = role == "Admin";
+}
+
+
+<h2 class="mb-3">Quản lý khuyến mãi</h2>
+
+@if (isAdmin)
+{
+    <a class="btn btn-primary mb-3" href="@Url.Action("Create")">
+        Thêm khuyến mãi
+    </a>
+}
+
+<table class="table table-bordered table-hover align-middle">
+    <thead class="table-dark text-center">
+        <tr>
+            <th>Tên KM</th>
+            <th>Sản phẩm</th>
+            <th>% Giảm</th>
+            <th>Thời gian</th>
+            <th>Trạng thái</th>
+            @if (isAdmin)
+            {
+                <th width="140">Thao tác</th>
+            }
+
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="6" class="text-center text-muted">
+                    Chưa có khuyến mãi nào
+                </td>
+            </tr>
+        }
+        else
+        {
+            foreach (var km in Model)
+            {
+                bool dangApDung = km.NgayBD <= now && km.NgayKT >= now;
+
+    <tr>
+        <td>@km.TenKM</td>
+
+        <td>
+            @if (km.SanPham != null)
+            {
+                <span class="fw-bold">@km.SanPham.TenSanPham</span>
+            }
+            else
+            {
+                <span class="text-danger fst-italic">
+                    (Chưa gán sản phẩm)
+                </span>
+            }
+        </td>
+
+        <td class="text-center">
+            <span class="badge bg-danger fs-6">
+                @km.MucGiam%
+            </span>
+        </td>
+
+        <td class="text-center">
+            @km.NgayBD.ToString("dd/MM/yyyy")
+            <br />
+            <small class="text-muted">
+                → @km.NgayKT.ToString("dd/MM/yyyy")
+            </small>
+        </td>
+
+        <td class="text-center">
+            @if (dangApDung)
+            {
+                <span class="badge bg-success">Đang áp dụng</span>
+            }
+            else
+            {
+                <span class="badge bg-secondary">Hết hạn</span>
+            }
+        </td>
+
+        @if (isAdmin)
+        {
+            <td class="text-center">
+                <a class="btn btn-sm btn-warning"
+                   href="@Url.Action("Edit", new { id = km.MaKM })">
+                    Sửa
+                </a>
+                <a class="btn btn-sm btn-danger"
+                   href="@Url.Action("Delete", new { id = km.MaKM })"
+                   onclick="return confirm('Bạn chắc chắn muốn xóa khuyến mãi này?');">
+                    Xóa
+                </a>
+            </td>
+        }
+
+    </tr>
+            }
+        }
+    </tbody>
+</table>

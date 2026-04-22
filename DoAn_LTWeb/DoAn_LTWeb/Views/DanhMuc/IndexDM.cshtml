@@ -1,0 +1,158 @@
+﻿@using DoAn_LTWeb.Models;
+@model List<SanPhamDMViewModel>
+@{
+    ViewBag.Title = "IndexDM";
+    Layout = "~/Views/Shared/UserLayout.cshtml";
+}
+@section Carousel {
+    <div id="carouselExampleControls" class="carousel slide custom-carousel" data-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item">
+                <img src="~/Content/Images/HinhAnh2.jpg" />
+            </div>
+            <div class="carousel-item">
+                <img src="~/Content/Images/HinhAnh3.jpg" />
+            </div>
+            <div class="carousel-item active">
+                <img src="~/Content/Images/HinhAnh4.jpg" />
+            </div>
+            <div class="carousel-item">
+                <img src="~/Content/Images/HinhAnh5.jpg" />
+            </div>
+        </div>
+
+        <a class="carousel-control-prev" href="#carouselExampleControls" data-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </a>
+
+        <a class="carousel-control-next" href="#carouselExampleControls" data-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </a>
+    </div>
+}
+
+<div class="book-list">
+    @foreach (var item in Model)
+    {
+        <div class="book-item">
+            <div class="image-wrapper">
+                <img src="~/Content/HinhAnh/@item.HinhAnhChinh"
+                     alt="@item.TenSanPham" />
+
+                @* NHÃN KHUYẾN MÃI *@
+                @if (item.MucGiam > 0)
+                {
+                    <span class="sale-badge">
+                        @item.MucGiam%
+                    </span>
+                }
+            </div>
+
+            <p class="product-name">@item.TenSanPham</p>
+
+            @if (item.MucGiam > 0)
+            {
+                <p class="price">
+                    <span class="original-price">
+                        @item.GiaGoc.ToString("N0") VNĐ
+                    </span>
+                    <span class="sale-price">
+                        @item.GiaKM.ToString("N0") VNĐ
+                    </span>
+                </p>
+            }
+            else
+            {
+                <p class="price">
+                    <span class="sale-price">
+                        @item.GiaGoc.ToString("N0") VNĐ
+                    </span>
+                </p>
+            }
+
+            <p class="detail-link">
+                <a href="@Url.Action("XemChiTiet", "Product",
+                    new { id = item.MaSanPham })">
+                    Xem chi tiết
+                </a>
+            </p>
+        </div>
+    }
+    @if (!Model.Any())
+    {
+        <p>Không có sách để hiển thị.</p>
+    }
+</div>
+
+<style>
+    .book-list {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 30px;
+        padding: 20px;
+    }
+
+    .book-item {
+        background-color: white;
+        border: 1px solid #ccc;
+        padding: 10px;
+        width: 200px;
+        text-align: center;
+        border-radius: 8px;
+        box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+
+        .book-item img {
+            width: 100%;
+            height: auto;
+        }
+
+    .price {
+        margin: 8px 0;
+    }
+
+    .sale-price {
+        color: red;
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    .original-price {
+        color: #999;
+        text-decoration: line-through;
+        margin-right: 5px;
+        font-size: 14px;
+    }
+
+    .detail-link {
+        display: inline-block;
+        margin-top: 10px;
+        color: #007bff; 
+        font-weight: 500;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+        .detail-link:hover {
+            text-decoration: underline;
+            color: #0056b3;
+        }
+    .image-wrapper {
+        position: relative;
+    }
+
+    .sale-badge {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        background-color: #e53935;
+        color: #fff;
+        padding: 5px 8px;
+        font-size: 13px;
+        font-weight: bold;
+        border-radius: 4px;
+        z-index: 10;
+    }
+
+</style>

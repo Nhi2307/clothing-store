@@ -1,0 +1,93 @@
+﻿@model IEnumerable<DoAn_LTWeb.Models.SanPham>
+
+@{
+    ViewBag.Title = "Quản lý sản phẩm";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    string vaiTro = Session["VaiTro"]?.ToString();
+    bool isAdmin = vaiTro == "Admin";
+    bool isNhanVien = vaiTro == "NhanVien";
+}
+
+<h3 class="mb-3"> Quản lý sản phẩm </h3>
+
+<div class="row align-items-center mb-3">
+    <div class="col-md-4">
+        @if (isAdmin)
+        {
+            <a href="@Url.Action("Add")" class="btn btn-primary">
+                <i class="fas fa-user-plus"></i> Thêm sản phẩm mới
+            </a>
+        }
+    </div>
+
+    <div class="col-md-8">
+        @using (Html.BeginForm("Index", "Product", FormMethod.Get))
+        {
+            <div class="d-flex justify-content-end gap-2">
+                <input type="text"
+                       name="keyword"
+                       value="@ViewBag.Keyword"
+                       class="form-control w-50"
+                       placeholder="Tìm sản phẩm..." />
+
+                <button type="submit" class="btn btn-secondary">
+                    <i class="fas fa-search"></i>
+                </button>
+
+                <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+                    <i class="fas fa-undo"></i>
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Mã SP</th>
+            <th>Tên SP</th>
+            <th>Danh mục</th>
+            <th>Giá</th>
+            <th>Số lượng tồn</th>
+            <th>Hình ảnh</th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var p in Model)
+        {
+            <tr>
+                <td>@p.MaSanPham</td>
+                <td>@p.TenSanPham</td>
+                <td>@(p.DanhMuc?.TenDanhMuc ?? "Chưa có")</td>
+                <td>@String.Format("{0:N0}", p.Gia ?? 0) đ</td>
+                <td>@p.SoLuongTon</td>
+                <td>
+                    <img src="@Url.Content("~/Content/HinhAnh/" + (string.IsNullOrEmpty(p.HinhAnhChinh) ? "no-image.png" : p.HinhAnhChinh))"
+                         width="50" class="img-thumbnail" />
+                </td>
+
+                <td>
+                    <!-- SỬA: ADMIN + NHÂN VIÊN -->
+                    <a href="@Url.Action("Edit", new { id = p.MaSanPham })"
+                       class="btn btn-warning btn-sm">
+                        <i class="fas fa-edit"></i> Sửa
+                    </a>
+
+                    <!-- XÓA: CHỈ ADMIN -->
+                    @if (isAdmin)
+                    {
+                        <a href="@Url.Action("Delete", new { id = p.MaSanPham })"
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này không?');">
+                            <i class="fas fa-trash"></i> Xóa
+                        </a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

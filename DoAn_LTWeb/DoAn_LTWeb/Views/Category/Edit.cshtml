@@ -1,0 +1,21 @@
+﻿@model DoAn_LTWeb.Models.DanhMuc
+@{
+    ViewBag.Title = "Sửa danh mục";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h3>Sửa danh mục</h3>
+
+@using (Html.BeginForm("Edit", "Category", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.MaDanhMuc)
+
+    <div class="mb-3">
+        @Html.LabelFor(m => m.TenDanhMuc)
+        @Html.TextBoxFor(m => m.TenDanhMuc, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.TenDanhMuc, "", new { @class = "text-danger" })
+    </div>
+    <button type="submit" class="btn btn-warning">Lưu thay đổi</button>
+    <a href="@Url.Action("Index")" class="btn btn-secondary">Hủy</a>
+}

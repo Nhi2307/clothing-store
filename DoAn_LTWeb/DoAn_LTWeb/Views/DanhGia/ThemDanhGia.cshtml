@@ -1,0 +1,96 @@
+﻿@model DoAn_LTWeb.Models.DanhGiaVM
+
+@{
+    ViewBag.Title = "Đánh giá sản phẩm";
+    Layout = "~/Views/Shared/UserLayout.cshtml";
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show mt-2">
+        <i class="fas fa-check-circle"></i>
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+
+<div class="container mt-4">
+    <h3>Đánh giá sản phẩm</h3>
+
+    @using (Html.BeginForm("ThemDanhGia", "DanhGia", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.HiddenFor(m => m.MaSanPham)
+        @Html.HiddenFor(m => m.MaDonHang)
+
+
+        <div class="mb-3">
+            <label>Số sao</label>
+
+            <div class="mb-3">
+                <label>Số sao</label>
+
+                <div class="star-rating">
+                    @for (int i = 5; i >= 1; i--)
+                    {
+                        <input type="radio"
+                               id="star-@i"
+                               name="Sao"
+                               value="@i"
+                               required />
+
+                        <label for="star-@i" title="@i sao">★</label>
+                    }
+                </div>
+            </div>
+
+        </div>
+
+        <div class="mb-3">
+            <label>Nội dung</label>
+            @Html.TextAreaFor(m => m.NoiDung,
+                new { @class = "form-control", rows = 4, required = "required" })
+        </div>
+
+        <button type="submit" class="btn btn-success">Gửi đánh giá</button>
+        <a href="javascript:history.back()" class="btn btn-secondary">Quay lại</a>
+    }
+</div>
+<style>
+    .star-rating {
+        direction: rtl;
+        display: inline-flex;
+        font-size: 2rem;
+    }
+
+        .star-rating input {
+            display: none;
+        }
+
+        .star-rating label {
+            color: #ccc;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+
+            .star-rating label:hover,
+            .star-rating label:hover ~ label {
+                color: gold;
+            }
+
+
+        .star-rating input:checked ~ label {
+            color: gold;
+        }
+</style>

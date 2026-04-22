@@ -1,0 +1,60 @@
+﻿@model IEnumerable<DoAn_LTWeb.Models.DanhMuc>
+@{
+    ViewBag.Title = "Categories";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h3 class="mb-3"> Quản lý danh mục </h3>
+
+<div class="row align-items-center mb-3">
+    <div class="col-md-4">
+        <a href="@Url.Action("Add","Category")" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Thêm danh mục
+        </a>
+    </div>
+
+    <div class="col-md-8">
+        @using (Html.BeginForm("Index", "Category", FormMethod.Get))
+        {
+            <div class="d-flex justify-content-end gap-2">
+                <input type="text"
+                       name="keyword"
+                       value="@ViewBag.Keyword"
+                       class="form-control w-50"
+                       placeholder="Tìm theo tên danh mục..." />
+
+                <button type="submit" class="btn btn-secondary">
+                    <i class="fas fa-search"></i>
+                </button>
+
+                <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+                    <i class="fas fa-undo"></i>
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Mã</th>
+            <th>Tên danh mục</th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var c in Model)
+        {
+            <tr>
+                <td>@c.MaDanhMuc</td>
+                <td>@c.TenDanhMuc</td>
+                <td>
+                    <a href="@Url.Action("Edit","Category", new { id = c.MaDanhMuc })" class="btn btn-warning btn-sm">  <i class="fas fa-edit"></i> Sửa</a>
+                    <a href="@Url.Action("Delete","Category", new { id = c.MaDanhMuc })" class="btn btn-danger btn-sm"> <i class="fas fa-trash"></i> Xóa</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

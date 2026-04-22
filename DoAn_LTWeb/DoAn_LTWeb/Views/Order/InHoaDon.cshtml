@@ -1,0 +1,179 @@
+﻿@model DoAn_LTWeb.Models.DonHang
+@{
+    Layout = null;
+    var ct = ViewBag.CTDH as List<DoAn_LTWeb.Models.ChiTietDonHang>;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Hóa đơn</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .invoice-container {
+            width: 900px;
+            margin: auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+            padding: 30px;
+            border: 1px solid #ddd;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #222;
+            padding-bottom: 15px;
+        }
+
+        .shop-info h2 {
+            margin: 0;
+            color: #000;
+            font-size: 28px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .shop-info p {
+            margin: 2px 0;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .customer-info {
+            margin-top: 20px;
+            padding: 15px;
+            background: #fafafa;
+            border-left: 4px solid #000;
+            border-radius: 8px;
+        }
+
+            .customer-info p {
+                margin: 4px 0;
+                color: #222;
+                font-size: 15px;
+            }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 25px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th {
+            background: #000;
+            color: white;
+            padding: 12px;
+            font-size: 15px;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            font-size: 14px;
+            color: #333;
+        }
+
+        tr:hover {
+            background: #f7f7f7;
+        }
+
+        .total-box {
+            margin-top: 25px;
+            text-align: right;
+        }
+
+            .total-box h2 {
+                color: #000;
+                font-size: 26px;
+                font-weight: 600;
+            }
+
+        .print-btn {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 12px 22px;
+            background: #000;
+            color: white;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.2s;
+        }
+
+            .print-btn:hover {
+                background: #333;
+            }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="invoice-container">
+
+        <div class="header">
+            <div class="shop-info">
+                <img src="~/Content/Images/Logo_1.jpg" style="width:120px; height:auto;" class="rounded" />
+                <p>Địa chỉ: Hồ Chí Minh – Việt Nam</p>
+                <p>Hotline: 0123 456 789</p>
+            </div>
+        </div>
+
+        <div class="customer-info">
+            <p><strong>Mã đơn hàng:</strong> @Model.MaDonHang</p>
+            <p><strong>Ngày đặt:</strong> @Model.NgayDat</p>
+            <p><strong>Khách hàng:</strong> @Model.NguoiDung.HoTen</p>
+            <p><strong>SĐT:</strong> @Model.NguoiDung.SoDienThoai</p>
+            <p><strong>Địa chỉ:</strong> @Model.NguoiDung.DiaChi</p>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Sản phẩm</th>
+                    <th>Size</th>
+                    <th>Màu</th>
+                    <th>SL</th>
+                    <th>Đơn giá</th>
+                    <th>Thành tiền</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in ct)
+                {
+                    <tr>
+                        <td>@item.SanPhamBienThe.SanPham.TenSanPham</td>
+                        <td>@item.SanPhamBienThe.Size.TenSize</td>
+                        <td>@item.SanPhamBienThe.MauSac.TenMau</td>
+                        <td>@item.SoLuong</td>
+                        <td>@(Convert.ToDecimal(item.DonGia).ToString("N0")) VNĐ</td>
+                        <td>@String.Format("{0:N0}", item.SoLuong * item.DonGia) VNĐ</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="total-box">
+            <h2>Tổng thanh toán: @(Model.TongTien?.ToString("N0")) VNĐ</h2>
+        </div>
+
+        <button class="print-btn" onclick="window.print()">In hóa đơn</button>
+
+    </div>
+
+</body>
+</html>

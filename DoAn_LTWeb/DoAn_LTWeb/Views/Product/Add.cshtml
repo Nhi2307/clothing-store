@@ -1,0 +1,122 @@
+﻿@model DoAn_LTWeb.Models.ThemSanPhamVM
+@{
+    ViewBag.Title = "Thêm sản phẩm";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h3>Thêm sản phẩm mới</h3>
+
+@Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+@using (Html.BeginForm("Add", "Product", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="mb-3">
+        <label>Tên sản phẩm</label>
+        @Html.TextBoxFor(m => m.SanPham.TenSanPham, new { @class = "form-control" })
+    </div>
+
+    <div class="mb-3">
+        <label>Danh mục</label>
+        @Html.DropDownListFor(
+            m => m.SanPham.MaDanhMuc,
+            ViewBag.DanhMucs as SelectList,
+            "Chọn danh mục",
+            new { @class = "form-control" })
+    </div>
+
+    <div class="mb-3">
+        <label>Giá</label>
+        @Html.TextBoxFor(m => m.SanPham.Gia, new { @class = "form-control", type = "number" })
+    </div>
+
+    <div class="mb-3">
+        <label>Tổng số lượng tồn</label>
+        @Html.TextBoxFor(m => m.SanPham.SoLuongTon, new
+        {
+            @class = "form-control",
+            type = "number",
+            id = "TongSoLuong",
+            @readonly = "readonly"
+        })
+    </div>
+
+
+    <div class="mb-3">
+        <label>Hình ảnh</label>
+        <input type="file" name="HinhAnhChinh" class="form-control" />
+    </div>
+
+    <hr />
+    <hr />
+    <h5>Chọn Size</h5>
+
+    foreach (var s in ViewBag.Sizes)
+    {
+        <div class="form-check">
+            <input type="checkbox"
+                   name="SelectedSizes"
+                   class="form-check-input size-checkbox"
+                   value="@s.MaSize"
+                   data-size="@s.MaSize" />
+            <label class="form-check-label">@s.TenSize</label>
+        </div>
+
+        <div class="size-block mt-2 ms-4"
+             id="size-@s.MaSize"
+             style="display:none">
+            <strong>Màu & số lượng:</strong>
+
+            @foreach (var m in ViewBag.MauSacs)
+            {
+                <div class="input-group mb-1">
+                    <span class="input-group-text">@m.TenMau</span>
+
+                    <input type="number"
+                           min="0"
+                           class="form-control so-luong"
+                           name="SoLuongBienThe[@(s.MaSize + "_" + m.MaMau)]"
+                           value="0" />
+                </div>
+            }
+        </div>
+    }
+
+    <button type="submit" class="btn btn-success">Thêm</button>
+    <a href="@Url.Action("Index")" class="btn btn-secondary">Hủy</a>
+}
+
+<script>
+    document.querySelectorAll('.size-checkbox').forEach(cb => {
+        cb.addEventListener('change', function () {
+            const sizeId = this.dataset.size;
+            const block = document.getElementById('size-' + sizeId);
+
+            if (this.checked) {
+                block.style.display = 'block';
+            } else {
+                block.style.display = 'none';
+                block.querySelectorAll('.so-luong').forEach(i => i.value = 0);
+            }
+            tinhTongSoLuong();
+        });
+    });
+
+    document.querySelectorAll('.so-luong').forEach(input => {
+        input.addEventListener('input', tinhTongSoLuong);
+    });
+
+    function tinhTongSoLuong() {
+        let tong = 0;
+
+        document.querySelectorAll('.size-checkbox:checked').forEach(cb => {
+            const sizeId = cb.dataset.size;
+            document
+                .querySelectorAll('#size-' + sizeId + ' .so-luong')
+                .forEach(i => tong += parseInt(i.value || 0));
+        });
+
+        document.getElementById('TongSoLuong').value = tong;
+    }
+</script>

@@ -1,0 +1,148 @@
+﻿@model List<DoAn_LTWeb.Models.DanhGia>
+
+@{
+    ViewBag.Title = "Quản lý đánh giá";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@{
+    string role = Session["VaiTro"] as string;
+    bool isAdmin = role == "Admin";
+    bool isStaff = role == "NhanVien";
+}
+
+
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show mt-2">
+        <i class="fas fa-check-circle"></i>
+        @TempData["Success"]
+    </div>
+}
+
+
+<h2 class="mb-3">Quản lý đánh giá sản phẩm</h2>
+@{
+    var tongDG = Model.Count;
+    var sao5 = Model.Count(d => (d.Sao ?? 0) == 5);
+    var sao4 = Model.Count(d => (d.Sao ?? 0) == 4);
+    var sao3 = Model.Count(d => (d.Sao ?? 0) == 3);
+    var sao2 = Model.Count(d => (d.Sao ?? 0) == 2);
+    var sao1 = Model.Count(d => (d.Sao ?? 0) == 1);
+}
+
+<table class="table table-bordered table-hover align-middle">
+    <thead class="table-dark">
+        <tr>
+            <th>Khách hàng</th>
+            <th>Sản phẩm</th>
+            <th>Sao</th>
+            <th>Nội dung</th>
+            <th>Ngày đánh giá</th>
+            @if (isAdmin || isStaff)
+            {
+                <th width="180">Hành động</th>
+            }
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var dg in Model)
+        {
+            <tr>
+                <td>@dg.NguoiDung.HoTen</td>
+                <td>@dg.SanPham.TenSanPham</td>
+                <td>
+                    @Html.Partial("_StarDisplay", dg.Sao ?? 0)
+                </td>
+                <td>@dg.NoiDung</td>
+                <td>@(dg.NgayDG?.ToString("dd/MM/yyyy HH:mm"))</td>
+                <td>
+                    <div class="d-flex gap-1 justify-content-center">
+                        <!-- PHẢN HỒI -->
+                        <button type="button"
+                                class="btn btn-sm btn-primary"
+                                data-bs-toggle="modal"
+                                data-bs-target="#replyModal"
+                                data-id="@dg.MaDG">
+                            <i class="fas fa-reply"></i> Phản hồi
+                        </button>
+
+
+                        @if (isAdmin)
+                        {
+                            using (Html.BeginForm("Delete", "DanhGia", new { id = dg.MaDG }, FormMethod.Post))
+                            {
+                                <button type="submit"
+                                        class="btn btn-sm btn-danger"
+                                        onclick="return confirm('Xóa đánh giá này.');">
+                                    <i class="fas fa-trash"></i> Xóa
+                                </button>
+                            }
+                        }
+
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@Html.Partial("_ReplyModel")
+
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="fw-bold mb-3">Thống kê đánh giá</h5>
+
+        <div class="row text-center">
+            <div class="col">
+                <h4>@tongDG</h4>
+                <small class="text-muted">Tổng đánh giá</small>
+            </div>
+        </div>
+
+        <hr />
+
+        @for (int i = 5; i >= 1; i--)
+        {
+            int count = i == 5 ? sao5 :
+                        i == 4 ? sao4 :
+                        i == 3 ? sao3 :
+                        i == 2 ? sao2 : sao1;
+
+            double percent = tongDG == 0 ? 0 : (double)count * 100 / tongDG;
+
+            <div class="d-flex align-items-center mb-2">
+                <div style="width: 90px;">
+                    @i <i class="fas fa-star text-warning"></i>
+                </div>
+
+                <div class="progress flex-grow-1 me-2" style="height: 8px;">
+                    <div class="progress-bar bg-warning"
+                         role="progressbar"
+                         style="width: @percent%">
+                    </div>
+                </div>
+
+                <div style="width: 80px;">
+                    <strong>@count</strong>
+                    <small class="text-muted">(@percent.ToString("0")%)</small>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    // Gán mã đánh giá vào modal
+    document.addEventListener("DOMContentLoaded", function () {
+        var modal = document.getElementById("replyModal");
+        modal.addEventListener("show.bs.modal", function (event) {
+            var button = event.relatedTarget;
+            var maDG = button.getAttribute("data-id");
+            modal.querySelector("input[name='maDG']").value = maDG;
+        });
+    });
+</script>
+

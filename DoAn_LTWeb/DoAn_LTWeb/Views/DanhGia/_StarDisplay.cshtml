@@ -1,0 +1,14 @@
+﻿@model int?
+
+@for (int i = 1; i <= 5; i++)
+{
+    if (i <= (Model ?? 0))
+    {
+        <i class="fas fa-star text-warning"></i>
+    }
+    else
+    {
+        <i class="far fa-star text-muted"></i>
+    }
+}
+

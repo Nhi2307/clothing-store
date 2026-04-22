@@ -1,0 +1,59 @@
+﻿@model IEnumerable<DoAn_LTWeb.Models.DonHang>
+@{
+    ViewBag.Title = "Quản lý đơn hàng";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h3 class="mb-3"> Quản lý đơn hàng </h3>
+
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Mã đơn</th>
+            <th>Khách hàng</th>
+            <th>Ngày đặt</th>
+            <th>Tổng tiền</th>
+            <th>Trạng thái</th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var o in Model)
+        {
+            string badge = "bg-secondary";
+            if (o.TrangThai == "Chờ xác nhận") { badge = "bg-warning"; }
+            else if (o.TrangThai == "Đang giao") { badge = "bg-info"; }
+            else if (o.TrangThai == "Hoàn thành") { badge = "bg-success"; }
+            else if (o.TrangThai == "Hủy") { badge = "bg-danger"; }
+
+            <tr>
+                <td>@o.MaDonHang</td>
+                <td>@(o.NguoiDung?.HoTen ?? "Không rõ")</td>
+                <td>@(o.NgayDat.HasValue ? o.NgayDat.Value.ToString("dd/MM/yyyy") : "")</td>
+                <td>@String.Format("{0:N0}", o.TongTien ?? 0) đ</td>
+
+                <td>
+                    <span class="badge @badge">@o.TrangThai</span>
+                </td>
+
+                <td>
+                    <a href="@Url.Action("Details", new { id = o.MaDonHang })" class="btn btn-info btn-sm">
+                        <i class="fas fa-eye"></i> Chi tiết
+                    </a>
+
+                    @if (o.TrangThai == "Hủy")
+                    {
+                        <a href="@Url.Action("Delete", new { id = o.MaDonHang })"
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Bạn có chắc muốn xóa đơn hàng này không?');">
+                            <i class="fas fa-trash"></i> Xóa
+                        </a>
+                    }
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

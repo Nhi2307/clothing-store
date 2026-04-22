@@ -1,0 +1,35 @@
+﻿<div class="modal fade" id="replyModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @using (Html.BeginForm("Reply", "DanhGia", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <h5 class="modal-title">Phản hồi đánh giá</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="hidden" name="maDG" />
+
+                    <div class="mb-3">
+                        <label class="form-label">Nội dung phản hồi</label>
+                        <textarea name="noiDung"
+                                  class="form-control"
+                                  rows="4"
+                                  required></textarea>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Gửi phản hồi</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Đóng
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+

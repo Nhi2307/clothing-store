@@ -1,0 +1,542 @@
+﻿@model DoAn_LTWeb.Models.ChiTietSanPhamVM
+@{
+    ViewBag.Title = Model.SanPham.TenSanPham;
+    Layout = "~/Views/Shared/UserLayout.cshtml";
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+<style>
+    .color-circle {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: 0.2s;
+        box-shadow: 0 0 3px rgba(0,0,0,0.15);
+    }
+
+        .color-circle:hover {
+            transform: scale(1.1);
+        }
+
+    .color-option:checked + label .color-circle {
+        border-color: #0d6efd;
+        box-shadow: 0 0 6px #0d6efd;
+    }
+
+    .size-box {
+        padding: 8px 16px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.2s;
+        user-select: none;
+        min-width: 50px;
+        text-align: center;
+        font-weight: 600;
+        color: #333;
+    }
+
+        .size-box:hover {
+            border-color: #0d6efd;
+        }
+
+    .size-option:checked + .size-box {
+        background-color: #0d6efd;
+        color: white !important;
+        border-color: #0d6efd;
+    }
+
+    .size-disabled {
+        background-color: #f3f3f3;
+        color: #bbb !important;
+        border-color: #eee !important;
+        cursor: not-allowed;
+        text-decoration: line-through;
+        opacity: 0.6;
+    }
+    .detail-link {
+        display: inline-block;
+        margin-top: 10px;
+        color: #007bff;
+        font-weight: 500;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    /* ===== GIÁ KHUYẾN MÃI GIỐNG INDEXDM ===== */
+
+    .price {
+        margin: 8px 0;
+    }
+
+    .sale-price {
+        color: red;
+        font-weight: bold;
+        font-size: 22px;
+    }
+
+    .original-price {
+        color: #999;
+        text-decoration: line-through;
+        margin-right: 6px;
+        font-size: 16px;
+    }
+
+    .image-wrapper {
+        position: relative;
+    }
+
+    .sale-badge {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        background-color: #e53935;
+        color: #fff;
+        padding: 6px 10px;
+        font-size: 14px;
+        font-weight: bold;
+        border-radius: 4px;
+        z-index: 10;
+    }
+
+</style>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-5 mb-4">
+            <img src="@Url.Content("~/Content/HinhAnh/" + Model.SanPham.HinhAnhChinh)"
+                 class="img-fluid rounded shadow-sm"
+                 alt="@Model.SanPham.TenSanPham"
+                 style="width: 100%; object-fit: cover;" />
+
+            @if (Model.DangKhuyenMai)
+            {
+                <span class="sale-badge">
+                    @Model.PhanTramGiam%
+                </span>
+            }
+        </div>
+
+        <div class="col-md-7">
+            <h2 class="fw-bold">@Model.SanPham.TenSanPham</h2>
+            <p class="text-muted">@Model.SanPham.MoTa</p>
+
+            @if (Model.DangKhuyenMai)
+            {
+                <p class="price my-3">
+                    <span class="original-price">
+                        @Model.GiaGoc.ToString("N0") VNĐ
+                    </span>
+                    <span class="sale-price">
+                        @Model.GiaSauGiam.ToString("N0") VNĐ
+                    </span>
+                </p>
+            }
+            else
+            {
+                <p class="price my-3">
+                    <span class="sale-price">
+                        @Model.GiaGoc.ToString("N0") VNĐ
+                    </span>
+                </p>
+            }
+
+
+
+            @using (Html.BeginForm("ThemGioHangAjax", "GioHang", FormMethod.Post, new { id = "formThemGioHang" }))
+            {
+                @Html.AntiForgeryToken()
+                <input type="hidden" id="MaSanPham" name="MaSanPham" value="@Model.SanPham.MaSanPham" />
+
+                <div class="mb-4">
+                    <h6 class="fw-bold">Chọn Màu Sắc:</h6>
+                    <div class="d-flex flex-wrap gap-3">
+                        @foreach (var mau in Model.MauSacs)
+                        {
+                            <input type="radio" class="btn-check color-option" name="MaMau" id="mau_@mau.MaMau" value="@mau.MaMau" autocomplete="off" required>
+                            <label for="mau_@mau.MaMau" style="cursor:pointer;">
+                                <div class="color-circle" style="background-color:@mau.MaMauHex"></div>
+                            </label>
+                        }
+                    </div>
+                    <div id="mau-error" class="text-danger small mt-1" style="display:none;">Vui lòng chọn màu sắc.</div>
+                </div>
+
+                <div class="mb-4">
+                    <h6 class="fw-bold">Chọn Kích Thước:</h6>
+                    <div class="d-flex flex-wrap gap-2" id="size-container">
+                        @foreach (var size in Model.Sizes.GroupBy(s => s.MaSize).Select(g => g.First()))
+                        {
+                            <input type="radio" class="btn-check size-option" name="MaSize" id="size_@size.MaSize" value="@size.MaSize" autocomplete="off" required disabled>
+                            <label for="size_@size.MaSize" class="size-box size-disabled">@size.TenSize</label>
+                        }
+                    </div>
+                    <div id="size-warning" class="text-warning small mt-2">
+                        <i class="bi bi-info-circle"></i> Vui lòng chọn màu trước để xem size phù hợp.
+                    </div>
+                    <div id="size-error" class="text-danger small mt-1" style="display:none;">Vui lòng chọn kích thước.</div>
+                </div>
+
+                <div class="mb-4" style="max-width: 150px;">
+                    <h6 class="fw-bold">Số Lượng:</h6>
+                    <div class="d-flex align-items-center">
+                        <button class="btn btn-outline-secondary" type="button" id="btnMinus">−</button>
+                        <input id="SoLuong" name="SoLuong"
+                               type="text"
+                               value="1"
+                               class="form-control text-center mx-2"
+                               style="width: 60px;"
+                               readonly />
+                        <button class="btn btn-outline-secondary" type="button" id="btnPlus">+</button>
+                    </div>
+                </div>
+
+                <button type="button" id="btnThemGioHang" class="btn btn-primary btn-lg w-100 py-3 fw-bold">
+                    <i class="bi bi-cart-plus-fill me-2"></i> Thêm Vào Giỏ Hàng
+                </button>
+            }
+        </div>
+    </div>
+
+    <hr />
+    <hr />
+    <h4 class="fw-bold">Đánh giá sản phẩm</h4>
+
+    <div class="d-flex align-items-center gap-3 mb-4">
+        <div class="display-5 fw-bold text-warning">
+            @Model.SaoTrungBinh
+        </div>
+
+        <div>
+            <div class="text-warning fs-5">
+                @for (int i = 1; i <= 5; i++)
+                {
+                    if (i <= Math.Round(Model.SaoTrungBinh))
+                    {
+                        <span>★</span>
+                    }
+                    else
+                    {
+                        <span class="text-muted">☆</span>
+                    }
+                }
+            </div>
+            <div class="text-muted">
+                @Model.TongSoDanhGia đánh giá
+            </div>
+        </div>
+    </div>
+
+
+    @if (Model.DanhGias != null && Model.DanhGias.Any())
+    {
+        var danhGiaHienThi = Model.DanhGias.Take(5).ToList();
+        var danhGiaConLai = Model.DanhGias.Skip(5).ToList();
+
+        foreach (var dg in danhGiaHienThi)
+        {
+            <div class="border rounded p-3 mb-3">
+                <strong>@dg.HoTen</strong>
+
+                <span class="text-warning ms-2">
+                    @for (int i = 1; i <= 5; i++)
+                    {
+                        if (i <= dg.Sao)
+                        {
+                            <span>★</span>
+                        }
+                        else
+                        {
+                            <span class="text-muted">☆</span>
+                        }
+                    }
+                </span>
+
+                <br />
+                <small class="text-muted">@dg.NgayDG.ToString("dd/MM/yyyy")</small>
+
+                <p class="mt-2">@dg.NoiDung</p>
+
+                @if (dg.PhanHois != null && dg.PhanHois.Any())
+                {
+                    foreach (var ph in dg.PhanHois)
+                    {
+                        <div class="ms-4 p-2 bg-light border-start border-success">
+                            <strong>@ph.TenNguoiDung (Shop)</strong>
+                            <p>@ph.NoiDung</p>
+                            <small>@ph.NgayPhanHoi.ToString("dd/MM/yyyy")</small>
+                        </div>
+                    }
+                }
+            </div>
+        }
+
+        if (danhGiaConLai.Any())
+        {
+            <div id="moreReviews" style="display:none;">
+                @foreach (var dg in danhGiaConLai)
+                {
+                    <div class="border rounded p-3 mb-3">
+                        <strong>@dg.HoTen</strong>
+
+                        <span class="text-warning ms-2">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                if (i <= dg.Sao)
+                                {
+                                    <span>★</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">☆</span>
+                                }
+                            }
+                        </span>
+
+                        <br />
+                        <small class="text-muted">@dg.NgayDG.ToString("dd/MM/yyyy")</small>
+
+                        <p class="mt-2">@dg.NoiDung</p>
+
+                        @if (dg.PhanHois != null && dg.PhanHois.Any())
+                        {
+                            foreach (var ph in dg.PhanHois)
+                            {
+                                <div class="ms-4 p-2 bg-light border-start border-success">
+                                    <strong>@ph.TenNguoiDung (Shop)</strong>
+                                    <p>@ph.NoiDung</p>
+                                    <small>@ph.NgayPhanHoi.ToString("dd/MM/yyyy")</small>
+                                </div>
+                            }
+                        }
+                    </div>
+                }
+            </div>
+
+            <button id="btnXemThem" class="btn btn-outline-secondary w-100 mt-3">
+                Xem thêm đánh giá
+            </button>
+        }
+    }
+    else
+    {
+        <p class="text-muted">Chưa có đánh giá nào cho sản phẩm này.</p>
+    }
+
+
+    <div class="row mt-5">
+        <h4 class="fw-bold mb-4">Sản phẩm tương tự</h4>
+        @if (Model.CungDanhMuc != null && Model.CungDanhMuc.Any())
+        {
+            foreach (var sp in Model.CungDanhMuc)
+            {
+                <div class="col-6 col-md-3 mb-4">
+                    <div class="card h-100 shadow-sm border-0">
+                        <a href="@Url.Action("XemChiTiet", "Product", new { id = sp.MaSanPham })">
+                            <img src="@Url.Content("~/Content/HinhAnh/" + sp.HinhAnhChinh)"
+                                 class="card-img-top" alt="@sp.TenSanPham" style="aspect-ratio: 3/4; object-fit: cover;">
+                        </a>
+                        <div class="card-body text-center d-flex flex-column justify-content-between">
+                            <h6 class="card-title text-truncate">@sp.TenSanPham</h6>
+                            @if (sp.PhanTramGiam > 0)
+                            {
+                                <span class="sale-badge">
+                                    @sp.PhanTramGiam%
+                                </span>
+                            }
+
+                            @if (sp.PhanTramGiam > 0)
+                            {
+                                <p class="card-text">
+                                    <span class="original-price">
+                                        @sp.Gia.ToString("N0") VNĐ
+                                    </span><br />
+                                    <span class="sale-price">
+                                        @sp.GiaKhuyenMai.ToString("N0") VNĐ
+                                    </span>
+                                </p>
+                            }
+                            else
+                            {
+                                <p class="card-text fw-bold" style="color:#ff0000">
+                                    @sp.Gia.ToString("N0") VNĐ
+                                </p>
+                            }
+
+
+                            <p class="detail-link">
+                                <a onclick="location.href='@Url.Action("XemChiTiet", "Product", new { id = sp.MaSanPham })'">
+                                    Xem chi tiết
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $("#btnXemThem").click(function () {
+        $("#moreReviews").slideDown();
+        $(this).hide();
+    });
+
+$(document).ready(function () {
+
+    var variantsData = @Html.Raw(Json.Encode(Model.CacBienTheSanCo));
+
+    $(".color-option").change(function () {
+        var selectedColorId = parseInt($(this).val(), 10);
+        $("#mau-error").hide();
+        $("#size-warning").hide();
+
+        $(".size-option").prop("checked", false).prop("disabled", true);
+        $(".size-box").addClass("size-disabled");
+        $("#SoLuong").val(1);
+
+        var hasAvailableSize = false;
+
+        $(".size-option").each(function () {
+            var $sizeInput = $(this);
+            var sizeId = parseInt($sizeInput.val(), 10);
+            var $sizeLabel = $("label[for='" + $sizeInput.attr('id') + "']");
+            var variantExists = variantsData.some(function (v) {
+                return v.MaMau === selectedColorId && v.MaSize === sizeId && v.SoLuongTon > 0;
+            });
+
+            if (variantExists) {
+                $sizeInput.prop("disabled", false);
+                $sizeLabel.removeClass("size-disabled");
+                hasAvailableSize = true;
+            }
+        });
+
+        if (!hasAvailableSize) {
+            $("#stock-info").html('<span class="text-danger">Màu này hiện đang tạm hết hàng mọi kích thước.</span>');
+        }
+    });
+
+    $(".size-option").change(function () {
+        $("#size-error").hide();
+        var selectedColorId = parseInt($("input[name='MaMau']:checked").val(), 10);
+        var selectedSizeId = parseInt($(this).val(), 10);
+
+        var variant = variantsData.find(function (v) {
+            return v.MaMau === selectedColorId && v.MaSize === selectedSizeId;
+        });
+
+        if (variant) {
+            $("#stock-info").text("Còn " + variant.SoLuongTon + " sản phẩm có sẵn.");
+            $("#SoLuong").attr("max", variant.SoLuongTon).val(1);
+        }
+    });
+
+    $("#btnPlus").click(function () {
+        let $input = $("#SoLuong");
+        let val = parseInt($input.val(), 10);
+        let max = parseInt($input.attr("max"), 10) || 999;
+
+        if (val < max) $input.val(val + 1);
+        else alert("Không thể chọn quá tồn kho (" + max + ").");
+    });
+
+    $("#btnMinus").click(function () {
+        let $input = $("#SoLuong");
+        let val = parseInt($input.val(), 10);
+        if (val > 1) $input.val(val - 1);
+    });
+
+    $("#btnThemGioHang").click(function () {
+        var MaSanPham = $("#MaSanPham").val();
+        var MaMau = $("input[name='MaMau']:checked").val();
+        var MaSize = $("input[name='MaSize']:checked").val();
+        var SoLuong = parseInt($("#SoLuong").val(), 10);
+        var token = $('input[name="__RequestVerificationToken"]').val();
+
+        var isValid = true;
+        if (!MaMau) { $("#mau-error").show(); isValid = false; }
+        if (!MaSize) { $("#size-error").show(); isValid = false; }
+        if (!isValid) return;
+
+        var maxStock = parseInt($("#SoLuong").attr("max"), 10);
+        if (SoLuong > maxStock) {
+            alert("Số lượng vượt quá tồn kho.");
+            return;
+        }
+
+        $.ajax({
+            url: '@Url.Action("ThemGioHangAjax", "GioHang")',
+            type: "POST",
+            data: {
+                MaSanPham: MaSanPham,
+                MaMau: MaMau,
+                MaSize: MaSize,
+                SoLuong: SoLuong,
+                __RequestVerificationToken: token
+            },
+            success: function (res) {
+                if (res.success) {
+
+                    // CẬP NHẬT TỒN KHO TRONG variantsData
+                    var variant = variantsData.find(function (v) {
+                        return v.MaMau === parseInt(MaMau, 10) && v.MaSize === parseInt(MaSize, 10);
+                    });
+
+                    if (variant) {
+                        variant.SoLuongTon = Math.max(0, variant.SoLuongTon - SoLuong);
+                    }
+
+                    // Cập nhật hiển thị tồn kho
+                    if (variant && variant.SoLuongTon > 0) {
+                        $("#stock-info").text("Còn " + variant.SoLuongTon + " sản phẩm có sẵn.");
+                        $("#SoLuong").attr("max", variant.SoLuongTon).val(1);
+                    } else {
+                        $("#stock-info").html('<span class="text-danger">Hết hàng size này.</span>');
+                        $("#SoLuong").val(1).attr("max", 0);
+                    }
+
+                    // Cập nhật lại size enable/disable
+                    var selectedColorId = parseInt(MaMau, 10);
+                    $(".size-option").each(function () {
+                        var sizeId = parseInt($(this).val(), 10);
+                        var sizeLabel = $("label[for='" + $(this).attr('id') + "']");
+                        var v = variantsData.find(function (x) {
+                            return x.MaMau === selectedColorId && x.MaSize === sizeId;
+                        });
+
+                        if (v && v.SoLuongTon > 0) {
+                            $(this).prop("disabled", false);
+                            sizeLabel.removeClass("size-disabled");
+                        } else {
+                            $(this).prop("disabled", true);
+                            sizeLabel.addClass("size-disabled");
+                        }
+                    });
+
+                    if ($("#cartCount").length) $("#cartCount").text(res.cartCount);
+                    alert(res.message);
+                } else {
+                    if (res.redirectUrl) {
+                        alert(res.message);
+                        window.location.href = res.redirectUrl + "?returnUrl=" + encodeURIComponent(window.location.href);
+                    } else {
+                        alert(res.message);
+                    }
+                }
+            },
+            error: function () {
+                alert("Lỗi server, vui lòng thử lại.");
+            }
+        });
+    });
+
+});
+</script>
+

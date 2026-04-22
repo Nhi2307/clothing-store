@@ -1,0 +1,21 @@
+﻿@using DoAn_LTWeb.Models
+@model List<DoAn_LTWeb.Models.DanhMuc>
+
+<li class="nav-item dropdown">
+    <a class="nav-link" style="cursor:pointer;">
+        Danh mục sản phẩm <i class="fa fa-angle-down"></i>
+    </a>
+    <div class="mega-menu">
+        @foreach (DanhMuc item in Model)
+        {
+
+            <p>
+                <a>@Html.ActionLink(@item.TenDanhMuc.ToUpper(), "SanPhamTheoDM", new { id = item.MaDanhMuc })</a>
+            </p>
+        }
+    </div>
+</li>
+
+
+
+

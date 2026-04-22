@@ -1,0 +1,172 @@
+﻿@model IEnumerable<DoAn_LTWeb.Models.DonHang>
+@{
+    ViewBag.Title = "Báo cáo Doanh thu";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid">
+    <h3 class="mb-4"><i class="fas fa-chart-line"></i> Báo cáo Doanh thu</h3>
+
+    <form method="get" class="mb-4">
+        <div class="row g-2 align-items-center">
+            <div class="col-auto">
+                <label class="fw-bold">Năm:</label>
+            </div>
+            <div class="col-auto">
+                <select name="year" class="form-select" onchange="this.form.submit()">
+                    @for (int y = DateTime.Now.Year; y >= DateTime.Now.Year - 5; y--)
+                    {
+                        <option value="@y" @(ViewBag.SelectedYear == y ? "selected" : "")>
+                            @y
+                        </option>
+                    }
+                </select>
+            </div>
+        </div>
+    </form>
+
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="stats-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                <i class="fas fa-shopping-cart fa-2x"></i>
+                <h3>@ViewBag.TotalOrdersCompleted</h3>
+                <p class="mb-0">Đơn hàng hoàn thành</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="stats-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <i class="fas fa-dollar-sign fa-2x"></i>
+                <h3>@String.Format("{0:N0}", ViewBag.TotalRevenueCompleted) đ</h3>
+                <p class="mb-0">Tổng doanh thu</p>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">
+                <i class="fas fa-chart-bar"></i> Doanh thu theo tháng (@ViewBag.SelectedYear)
+            </h5>
+        </div>
+        <div class="card-body">
+            <canvas id="revenueChart" height="120"></canvas>
+        </div>
+    </div>
+
+
+
+    <div class="card shadow-sm">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="fas fa-list"></i> Chi tiết các đơn hàng hoàn thành</h5>
+        </div>
+        <div class="card-body table-responsive">
+            <table class="table table-hover table-bordered">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Mã đơn</th>
+                        <th>Khách hàng</th>
+                        <th>Ngày đặt</th>
+                        <th>Tổng tiền</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center">Chưa có đơn hàng hoàn thành nào</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var dh in Model)
+                        {
+                            <tr>
+                                <td>@dh.MaDonHang</td>
+                                <td>@(dh.NguoiDung != null ? dh.NguoiDung.HoTen : "Không rõ")</td>
+                                <td>@(dh.NgayDat.HasValue ? dh.NgayDat.Value.ToString("dd/MM/yyyy HH:mm") : "")</td>
+                                <td>@String.Format("{0:N0}", dh.TongTien ?? 0) đ</td>
+                                <td>
+                                    <span class="badge bg-success">@dh.TrangThai</span>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .stats-card {
+        padding: 25px;
+        border-radius: 15px;
+        color: white;
+        margin-bottom: 20px;
+        text-align: center;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+        .stats-card h3 {
+            font-size: 2.5rem;
+            margin: 10px 0;
+        }
+
+        .stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+    .table th, .table td {
+        vertical-align: middle;
+    }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const labels = @Html.Raw(
+        Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.ChartLabels)
+    );
+
+    const data = @Html.Raw(
+        Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.ChartData)
+    );
+
+    const ctx = document.getElementById('revenueChart').getContext('2d');
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Doanh thu (VNĐ)',
+                data: data,
+                fill: true,
+                tension: 0.4,
+                backgroundColor: 'rgba(102,126,234,0.2)',
+                borderColor: '#667eea',
+                borderWidth: 3,
+                pointRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: true }
+            },
+            scales: {
+                y: {
+                    ticks: {
+                        callback: function (value) {
+                            return value.toLocaleString() + ' đ';
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+

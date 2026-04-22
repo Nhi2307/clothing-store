@@ -1,0 +1,154 @@
+﻿@model DoAn_LTWeb.Models.NguoiDung
+@{
+    ViewBag.Title = "Đăng Ký";
+    Layout = "~/Views/Shared/UserLayout.cshtml";
+}
+
+<div class="d-flex flex-column justify-content-center" style="min-height: calc(100vh - 70px)">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+
+            <div class="card shadow-sm card-custom-border custom-card-bg">
+
+                <div class="card-header text-white text-center custom-header">
+                    <h3 class="mb-0"><i class="fas fa-user-plus"></i> Tạo Tài Khoản</h3>
+                </div>
+
+                <div class="card-body p-4">
+
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-circle"></i> @TempData["Error"]
+                        </div>
+                    }
+
+                    @using (Html.BeginForm("DangKy", "Account", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="form-group mb-3">
+                            <label class="form-label-custom"><i class="fas fa-user icon-custom"></i> Họ tên</label>
+                            @Html.TextBoxFor(m => m.HoTen, new { @class = "form-control custom-input", placeholder = "Nhập họ tên" })
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label class="form-label-custom"><i class="fas fa-envelope icon-custom"></i> Email</label>
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control custom-input", type = "email", placeholder = "Nhập email" })
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label class="form-label-custom"><i class="fas fa-user-circle icon-custom"></i> Tài khoản</label>
+                            @Html.TextBoxFor(m => m.TaiKhoan, new { @class = "form-control custom-input", placeholder = "Tên tài khoản" })
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label class="form-label-custom"><i class="fas fa-lock icon-custom"></i> Mật khẩu</label>
+                            @Html.PasswordFor(m => m.MatKhau, new { @class = "form-control custom-input", placeholder = "Nhập mật khẩu" })
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label class="form-label-custom"><i class="fas fa-lock icon-custom"></i> Xác nhận mật khẩu</label>
+                            <input type="password" name="matKhauXacNhan" class="form-control custom-input" placeholder="Nhập lại mật khẩu" required />
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label class="form-label-custom"><i class="fas fa-phone icon-custom"></i> Số điện thoại</label>
+                            @Html.TextBoxFor(m => m.SoDienThoai, new { @class = "form-control custom-input", placeholder = "Nhập số điện thoại" })
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label class="form-label-custom"><i class="fas fa-map-marker-alt icon-custom"></i> Địa chỉ</label>
+                            @Html.TextBoxFor(m => m.DiaChi, new { @class = "form-control custom-input", placeholder = "Nhập địa chỉ" })
+                        </div>
+
+                        <button type="submit" class="btn custom-btn w-100">
+                            <i class="fas fa-user-plus"></i> Đăng Ký
+                        </button>
+
+                        <div class="text-center mt-3">
+                            <span>
+                                Đã có tài khoản?
+                                <a href="@Url.Action("DangNhap", "Account")" class="link-custom">
+                                    Đăng nhập
+                                </a>
+                            </span>
+                        </div>
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    .custom-card-bg {
+        background-color: #ffffff;
+        border-radius: 14px;
+        overflow: hidden;
+    }
+
+    .card-custom-border {
+        border: 1px solid #d4d4d4;
+    }
+
+    .custom-header {
+        background-color: #2f2f2f;
+        padding: 15px;
+        border-radius: 0;
+    }
+
+    .form-label-custom {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .icon-custom {
+        color: #c8b9a6;
+        margin-right: 6px;
+    }
+
+
+    .custom-input {
+        border-radius: 10px;
+        border: 1px solid #cfcfcf;
+        background: #fafafa;
+        padding: 10px;
+    }
+
+        .custom-input:focus {
+            border-color: #a8a8a8;
+            box-shadow: none;
+        }
+
+
+    .custom-btn {
+        background-color: #2f2f2f;
+        border: none;
+        color: white;
+        border-radius: 10px;
+        padding: 10px;
+        font-size: 16px;
+        transition: 0.3s;
+    }
+
+        .custom-btn:hover {
+            background-color: #1e1e1e;
+        }
+
+
+    .link-custom {
+        color: #2f2f2f;
+        font-weight: 600;
+    }
+
+        .link-custom:hover {
+            color: #000;
+        }
+
+    .card:hover {
+        box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        transition: 0.3s;
+    }
+</style>

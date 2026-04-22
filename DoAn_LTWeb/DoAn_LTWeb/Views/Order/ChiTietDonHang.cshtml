@@ -1,0 +1,59 @@
+﻿@model DoAn_LTWeb.Models.DonHang
+@{
+    ViewBag.Title = "ChiTietDonHang";
+    Layout = "~/Views/Shared/UserLayout.cshtml";
+    var chiTiet = ViewBag.CTDH as List<DoAn_LTWeb.Models.ChiTietDonHang>;
+}
+
+<div class="container mt-4">
+    <h2 class="mb-3">Chi Tiết Đơn Hàng @Model.MaDonHang</h2>
+
+    <div class="card p-3 mb-4">
+        <p>
+            <strong>Ngày đặt:</strong> @Model.NgayDat
+        </p>
+        <p><strong>Trạng thái:</strong> <span class="text-primary">@Model.TrangThai</span></p>
+        <p><strong>Tổng tiền:</strong> <span class="text-danger">@((Model.TongTien ?? 0).ToString("N0")) VNĐ</span></p>
+    </div>
+
+    <h4>Danh sách sản phẩm</h4>
+
+    <table class="table table-bordered text-center">
+        <thead>
+            <tr>
+                <th>Ảnh</th>
+                <th>Sản phẩm</th>
+                <th>Giá</th>
+                <th>Số lượng</th>
+                <th>Thành tiền</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in chiTiet)
+            {
+                var sp = item.SanPhamBienThe;
+                <tr>
+                    <td>
+                        <img src="@Url.Content("~/Content/hinhanh/" + sp.SanPham.HinhAnhChinh)"
+                             style="width:80px; height:80px;" />
+                    </td>
+                    <td>
+                        @sp.SanPham.TenSanPham
+                        <br />
+                        <small>Màu: @sp.MauSac.TenMau</small>
+                        <br />
+                        <small>Size: @sp.Size.TenSize</small>
+                    </td>
+                    <td>@((item.DonGia ?? 0).ToString("N0")) VNĐ</td>
+                    <td>@item.SoLuong</td>
+                    <td>@((item.ThanhTien ?? 0).ToString("N0")) VNĐ</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="mt-4">
+        <a href="@Url.Action("IndexDM", "DanhMuc")" class="btn btn-primary">Tiếp tục mua sắm</a>
+
+    </div>
+</div>

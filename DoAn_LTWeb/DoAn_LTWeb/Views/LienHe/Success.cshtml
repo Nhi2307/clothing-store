@@ -1,0 +1,14 @@
+﻿@{
+    ViewBag.Title = "Gửi liên hệ thành công";
+    Layout = "~/Views/Shared/UserLayout.cshtml";
+}
+
+<div class="container py-5">
+    <div class="alert alert-info text-center">
+        <h4>🎉 Gửi liên hệ thành công!</h4>
+        <p>Cảm ơn bạn đã phản hồi. Chúng tôi sẽ liên hệ sớm nhất.</p>
+        <a href="@Url.Action("IndexDM", "DanhMuc")" class="btn btn-dark mt-3">
+            Về trang chủ
+        </a>
+    </div>
+</div>

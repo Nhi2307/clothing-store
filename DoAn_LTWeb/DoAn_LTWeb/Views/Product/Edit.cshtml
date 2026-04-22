@@ -1,0 +1,46 @@
+﻿@model DoAn_LTWeb.Models.SanPham
+@{
+    ViewBag.Title = "Sửa sản phẩm";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h3>Sửa sản phẩm</h3>
+
+@using (Html.BeginForm("Edit", "Product", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.MaSanPham)
+
+    <div class="mb-3">
+        @Html.LabelFor(m => m.TenSanPham)
+        @Html.TextBoxFor(m => m.TenSanPham, new { @class = "form-control" })
+    </div>
+
+    <div class="mb-3">
+        @Html.LabelFor(m => m.MaDanhMuc, "Danh mục")
+        @Html.DropDownList("MaDanhMuc", ViewBag.DanhMucs as SelectList, "Chọn danh mục", new { @class = "form-control" })
+    </div>
+
+    <div class="mb-3">
+        @Html.LabelFor(m => m.Gia)
+        @Html.TextBoxFor(m => m.Gia, new { @class = "form-control", type = "number" })
+    </div>
+
+    <div class="mb-3">
+        @Html.LabelFor(m => m.SoLuongTon, "Số lượng tồn")
+        @Html.TextBoxFor(m => m.SoLuongTon,
+            new { @class = "form-control", type = "number", min = "0" })
+    </div>
+
+
+
+    <div class="mb-3">
+        <label>Hình ảnh hiện tại</label><br />
+        <img src="~/Content/HinhAnh/@Model.HinhAnhChinh" width="100" /><br />
+        <label>Thay đổi hình ảnh</label>
+        <input type="file" name="HinhAnhChinh" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-warning">Lưu thay đổi</button>
+    <a href="@Url.Action("Index")" class="btn btn-secondary">Hủy</a>
+}

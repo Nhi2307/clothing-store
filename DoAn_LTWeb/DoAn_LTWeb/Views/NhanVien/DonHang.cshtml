@@ -1,0 +1,42 @@
+﻿@model IEnumerable<DoAn_LTWeb.Models.DonHang>
+
+@{
+    ViewBag.Title = "Đơn hàng";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h4 class="mb-3">
+    <i class="fas fa-list"></i> Danh sách đơn hàng
+</h4>
+
+@if (ViewBag.PendingOrderList != null && ViewBag.PendingOrderList.Count > 0)
+{
+    foreach (var order in ViewBag.PendingOrderList)
+    {
+        <tr>
+            <td><strong>@order.MaDonHang</strong></td>
+            <td>@order.NguoiDung.HoTen</td>
+            <td>@order.NgayDat.ToString("dd/MM/yyyy HH:mm")</td>
+            <td>@String.Format("{0:N0}", order.TongTien ?? 0) đ</td>
+            <td>
+                <span class="badge bg-warning text-dark">
+                    @order.TrangThai
+                </span>
+            </td>
+            <td>
+                <a href="@Url.Action("Index", "Order", new { id = order.MaDonHang })"
+                   class="btn btn-sm btn-outline-primary">
+                    <i class="fas fa-eye"></i>
+                </a>
+            </td>
+        </tr>
+    }
+}
+else
+{
+    <tr>
+        <td colspan="6" class="text-center text-muted">
+            Không có đơn hàng đang chờ xử lý
+        </td>
+    </tr>
+}

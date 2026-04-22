@@ -1,0 +1,45 @@
+﻿@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@model DoAn_LTWeb.Models.KhuyenMai
+
+<h2 class="text-danger">Xác nhận xóa khuyến mãi</h2>
+
+<table class="table table-bordered">
+    <tr>
+        <th>Tên khuyến mãi</th>
+        <td>@Model.TenKM</td>
+    </tr>
+    <tr>
+        <th>Sản phẩm</th>
+        <td>@(Model.SanPham != null ? Model.SanPham.TenSanPham : "Chưa có sản phẩm")</td>
+    </tr>
+    <tr>
+        <th>% Giảm</th>
+        <td>@Model.MucGiam %</td>
+    </tr>
+    <tr>
+        <th>Thời gian</th>
+        <td>@Model.NgayBD.ToShortDateString() - @Model.NgayKT.ToShortDateString()</td>
+    </tr>
+    <tr>
+        <th>Mô tả</th>
+        <td>@Model.MoTa</td>
+    </tr>
+</table>
+
+@using (Html.BeginForm("DeleteConfirmed", "Promotion", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.MaKM)
+
+    <button type="submit" class="btn btn-danger">
+        Xác nhận xóa
+    </button>
+
+    <a href="@Url.Action("Index")" class="btn btn-secondary ms-2">
+        Quay lại
+    </a>
+}

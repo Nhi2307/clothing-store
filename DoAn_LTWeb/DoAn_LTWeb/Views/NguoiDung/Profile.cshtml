@@ -1,0 +1,41 @@
+﻿@model DoAn_LTWeb.Models.NguoiDung
+@{
+    ViewBag.Title = "Hồ sơ cá nhân";
+}
+
+<div class="card p-4 shadow">
+    <h3 class="mb-3">Thông tin tài khoản</h3>
+
+    <p><strong>Họ tên:</strong> @Model.HoTen</p>
+    <p><strong>Email:</strong> @Model.Email</p>
+    <p><strong>Số điện thoại:</strong> @Model.SoDienThoai</p>
+    <p><strong>Địa chỉ:</strong> @Model.DiaChi</p>
+    <p><strong>Vai trò:</strong> @Model.VaiTro</p>
+
+    <a href="@Url.Action("EditProfile", "NguoiDung")" class="btn btn-primary mt-3">
+        <i class="fas fa-edit"></i> Cập nhật hồ sơ
+    </a>
+
+    <a href="@Url.Action("ChangePassword", "Account")"
+      class="btn btn-outline-primary mt-2">
+        Đổi mật khẩu
+    </a>
+
+    <a href="@Url.Action("LichSuDonHang", "Order")"
+       class="btn btn-outline-primary mt-2">
+        Xem lịch sử đơn hàng
+    </a>
+
+    <a href="@Url.Action("DanhGia_PhanHoi", "DanhGia")"
+       class="btn btn-outline-primary mt-2">
+        Xem đánh giá của tôi
+    </a>
+
+    <a href="@Url.Action("LienHe_PhanHoi", "LienHe")"
+       class="btn btn-outline-primary mt-2">
+        Xem liên hệ của tôi
+    </a>
+
+</div>
+
+

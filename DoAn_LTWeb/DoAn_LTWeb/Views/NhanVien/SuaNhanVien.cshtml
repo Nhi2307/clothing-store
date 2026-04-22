@@ -1,0 +1,49 @@
+﻿@model DoAn_LTWeb.Models.NhanVienVM
+@{
+    ViewBag.Title = "Sửa nhân viên";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h3 class="mb-4">Sửa thông tin nhân viên</h3>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.MaNguoiDung)
+    @Html.HiddenFor(m => m.TaiKhoan)
+
+
+    <div class="mb-3">
+        <label class="form-label">Họ tên</label>
+        @Html.TextBoxFor(m => m.HoTen, new { @class = "form-control", required = "required" })
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Email</label>
+        @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Số điện thoại</label>
+        @Html.TextBoxFor(m => m.SoDienThoai, new { @class = "form-control" })
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Địa chỉ</label>
+        @Html.TextBoxFor(m => m.DiaChi, new { @class = "form-control" })
+    </div>
+
+    <button type="submit" class="btn btn-success">
+        Lưu thay đổi
+    </button>
+
+    <a href="@Url.Action("DSNhanVien")" class="btn btn-secondary ms-2">
+        Quay lại
+    </a>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+

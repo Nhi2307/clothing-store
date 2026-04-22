@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="b775bbd36d4443c6a2d000e15f44d908" Name="Diagram1" ZoomLevel="109">
+        <EntityTypeShape EntityType="QuanLyQuanAoModel.ChiTietDonHang" Width="1.5" PointX="10.5" PointY="9.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="QuanLyQuanAoModel.DanhGia" Width="1.5" PointX="5.25" PointY="8.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="QuanLyQuanAoModel.DanhMuc" Width="1.5" PointX="0.75" PointY="10" IsExpanded="true" />
+        <EntityTypeShape EntityType="QuanLyQuanAoModel.DonHang" Width="1.5" PointX="3" PointY="4.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="QuanLyQuanAoModel.HinhAnhSanPham" Width="1.5" PointX="5.25" PointY="12.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="QuanLyQuanAoModel.KhuyenMai" Width="1.5" PointX="5.25" PointY="15" IsExpanded="true" />
+        <EntityTypeShape EntityType="QuanLyQuanAoModel.LienHe" Width="1.5" PointX="0.75" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="QuanLyQuanAoModel.MauSac" Width="1.5" PointX="6" PointY="2.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="QuanLyQuanAoModel.NguoiDung" Width="1.5" PointX="0.75" PointY="4.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="QuanLyQuanAoModel.PhanHoiDanhGia" Width="1.5" PointX="7.5" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="QuanLyQuanAoModel.PhanHoiLienHe" Width="1.5" PointX="3" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="QuanLyQuanAoModel.SanPham" Width="1.5" PointX="3" PointY="9.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="QuanLyQuanAoModel.SanPhamBienThe" Width="1.5" PointX="8.25" PointY="9.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="QuanLyQuanAoModel.Size" Width="1.5" PointX="6" PointY="18.375" IsExpanded="true" />
+        <AssociationConnector Association="QuanLyQuanAoModel.FK__ChiTietDo__MaBie__75A278F5" ManuallyRouted="false" />
+        <AssociationConnector Association="QuanLyQuanAoModel.FK__ChiTietDo__MaDon__74AE54BC" ManuallyRouted="false" />
+        <AssociationConnector Association="QuanLyQuanAoModel.FK__DanhGia__MaDonHa__04E4BC85" ManuallyRouted="false" />
+        <AssociationConnector Association="QuanLyQuanAoModel.FK__DanhGia__MaNguoi__02FC7413" ManuallyRouted="false" />
+        <AssociationConnector Association="QuanLyQuanAoModel.FK__DanhGia__MaSanPh__03F0984C" ManuallyRouted="false" />
+        <AssociationConnector Association="QuanLyQuanAoModel.FK__PhanHoiDan__MaDG__0B91BA14" ManuallyRouted="false" />
+        <AssociationConnector Association="QuanLyQuanAoModel.FK__SanPham__MaDanhM__5CD6CB2B" ManuallyRouted="false" />
+        <AssociationConnector Association="QuanLyQuanAoModel.FK__DonHang__MaNguoi__70DDC3D8" ManuallyRouted="false" />
+        <AssociationConnector Association="QuanLyQuanAoModel.FK__HinhAnhSa__MaSan__6B24EA82" ManuallyRouted="false" />
+        <AssociationConnector Association="QuanLyQuanAoModel.FK__KhuyenMai__MaSan__07C12930" ManuallyRouted="false" />
+        <AssociationConnector Association="QuanLyQuanAoModel.FK__PhanHoiLi__MaLie__7C4F7684" ManuallyRouted="false" />
+        <AssociationConnector Association="QuanLyQuanAoModel.FK__SanPhamBi__MaMau__68487DD7" ManuallyRouted="false" />
+        <AssociationConnector Association="QuanLyQuanAoModel.FK__PhanHoiDa__MaNgu__0C85DE4D" ManuallyRouted="false" />
+        <AssociationConnector Association="QuanLyQuanAoModel.FK__PhanHoiLi__MaNgu__7D439ABD" ManuallyRouted="false" />
+        <AssociationConnector Association="QuanLyQuanAoModel.FK__SanPhamBi__MaSan__66603565" ManuallyRouted="false" />
+        <AssociationConnector Association="QuanLyQuanAoModel.FK__SanPhamBi__MaSiz__6754599E" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
