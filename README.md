@@ -31,13 +31,11 @@ SQL Server Management Studio (SSMS)
 
 2. Tạo database
    - Mở SSMS, tạo database mới tên QuanLyQuanAo
-   - Mở file .sql trong repo và chạy toàn bộ 
-     để tạo bảng và dữ liệu mẫu
+   - Mở file .sql trong repo và chạy toàn bộ để tạo bảng và dữ liệu mẫu
 
 3. Cập nhật connection string
    - Mở Web.config trong project
-   - Tìm phần <connectionStrings> và sửa Data Source 
-     thành tên SQL Server trên máy bạn
+   - Tìm phần <connectionStrings> và sửa Data Source thành tên SQL Server trên máy bạn
    - Đảm bảo Initial Catalog = QuanLyQuanAo
 
 4. Mở và chạy project
